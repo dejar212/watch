@@ -360,7 +360,7 @@ class CompactFramework:
         if watch_mode:
             css_path = os.path.join(os.path.dirname(__file__), 'watch_styles.css')
         else:
-            css_path = os.path.join(os.path.dirname(__file__), 'styles.css')
+        css_path = os.path.join(os.path.dirname(__file__), 'styles.css')
         
         # Читаем CSS
         with open(css_path, 'r', encoding='utf-8') as f:
