@@ -1,0 +1,319 @@
+/* Компактная верстка для математических задач */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-color: #4ecdc4;
+    --secondary-color: #ff6b6b;
+    --border-color: #333333;
+    --spacing-unit: 0.5rem;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    padding: 1cm;
+}
+
+/* Заголовок */
+.header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+}
+
+.header .author,
+.header .date {
+    font-size: 1rem;
+    color: #cccccc;
+}
+
+/* Сеточная верстка */
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+}
+
+/* Типы задач */
+.task {
+    background-color: #0a0a0a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.task-short {
+    grid-column: span 1;
+    min-height: 15cm;
+}
+
+.task-medium {
+    grid-column: span 1;
+    min-height: 15cm;
+}
+
+.task-long {
+    grid-column: span 2;
+    min-height: 15cm;
+}
+
+/* Заголовок задачи */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.task-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.task-category {
+    font-size: 0.75rem;
+    color: #888888;
+    text-transform: uppercase;
+}
+
+/* Содержимое задачи */
+.task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.task-solution {
+    font-size: 10.5pt;
+    line-height: 1.35;
+}
+
+/* Математические формулы */
+.math-inline {
+    display: inline;
+    margin: 0 0.1rem;
+}
+
+.math-block {
+    display: block;
+    margin: 0.4rem 0;
+    text-align: center;
+    overflow-x: auto;
+}
+
+/* MathJax настройки */
+.MathJax {
+    font-size: 100% !important;
+}
+
+.MathJax_Display {
+    margin: 0.3rem 0 !important;
+}
+
+/* Визуализации */
+.task-visualization {
+    margin-top: 0.5rem;
+    text-align: center;
+    max-height: 40%;
+}
+
+.task-visualization svg {
+    max-width: 100%;
+    max-height: 200px;
+    height: auto;
+}
+
+/* Компактные списки */
+.task-solution ul,
+.task-solution ol {
+    margin: 0.3rem 0 0.3rem 1.2rem;
+    padding: 0;
+}
+
+.task-solution li {
+    margin: 0.2rem 0;
+    line-height: 1.3;
+}
+
+/* Компактные абзацы */
+.task-solution p {
+    margin: 0.3rem 0;
+}
+
+/* Выделение важного */
+.highlight {
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.answer {
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-color);
+}
+
+/* Компактные таблицы */
+table {
+    border-collapse: collapse;
+    margin: 0.3rem auto;
+    font-size: 10pt;
+}
+
+table td,
+table th {
+    border: 1px solid var(--border-color);
+    padding: 0.2rem 0.4rem;
+}
+
+/* Адаптивность для печати */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        padding: 0.5cm;
+    }
+    
+    .task {
+        background-color: white;
+        border-color: #000000;
+        page-break-inside: avoid;
+    }
+    
+    .task-long {
+        page-break-inside: auto;
+    }
+    
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+}
+
+/* Для экранов меньше */
+@media screen and (max-width: 1200px) {
+    .tasks-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .task-short,
+    .task-medium,
+    .task-long {
+        grid-column: span 1;
+    }
+}
+
+/* Дополнительная компактность */
+.compact {
+    line-height: 1.25;
+    font-size: 10pt;
+}
+
+.compact .math-block {
+    margin: 0.2rem 0;
+}
+
+/* Визуальные разделители */
+.task-step {
+    margin: 0.3rem 0;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--accent-color);
+}
+
+/* Сокращения и специальные символы */
+.abbr {
+    font-style: italic;
+    color: #cccccc;
+}
+
+/* Матрицы и определители */
+.matrix-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Система уравнений */
+.system-equations {
+    margin: 0.3rem 0;
+}
+
+/* Вектора */
+.vector-notation {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Подсветка результатов */
+.result-box {
+    background-color: #1a1a1a;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    padding: 0.4rem;
+    margin: 0.5rem 0;
+}
+
+/* Компактные шаги решения */
+.solution-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.solution-step {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.step-number {
+    color: var(--accent-color);
+    font-weight: bold;
+    min-width: 1.5rem;
+}
+
+.step-content {
+    flex: 1;
+}
+
+/* Для двухколоночной компоновки внутри задачи */
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    align-items: start;
+}
+
+.two-column .left-col {
+    padding-right: 0.5rem;
+}
+
+.two-column .right-col {
+    padding-left: 0.5rem;
+}
+

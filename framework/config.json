@@ -1,0 +1,35 @@
+{
+  "page_settings": {
+    "background": "#000000",
+    "text_color": "#ffffff",
+    "square_size": "15cm",
+    "font_size": "11pt",
+    "compact_spacing": true
+  },
+  "task_categories": {
+    "short": {
+      "width": "0.5",
+      "height": "1",
+      "description": "Короткие задачи, две в ряд"
+    },
+    "medium": {
+      "width": "1",
+      "height": "1",
+      "description": "Средние задачи, одна на ширину колонки"
+    },
+    "long": {
+      "width": "2",
+      "height": "1",
+      "description": "Длинные задачи, на полную ширину"
+    }
+  },
+  "visualization_settings": {
+    "figure_size": [6, 6],
+    "dpi": 100,
+    "style": "dark_background",
+    "grid": true,
+    "axis_color": "#ffffff",
+    "line_width": 2
+  }
+}
+
