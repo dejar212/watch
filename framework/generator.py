@@ -214,6 +214,38 @@ class CompactFramework:
     <title>Watch Task</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        // AUTO-FIT LOGIC
+        window.addEventListener('load', function() {{
+            const container = document.querySelector('.watch-container');
+            if (!container) return;
+
+            // 1. Adjust Font Size to Fill
+            // Only for adaptive layout or generally to prevent overflow
+            function autoFit() {{
+                let fontSize = 100; // Start percentage
+                const minSize = 40;
+                
+                // Check for overflow
+                while (container.scrollHeight > container.clientHeight && fontSize > minSize) {{
+                    fontSize -= 2;
+                    document.body.style.fontSize = fontSize + '%';
+                }}
+                
+                // If too much space (only for adaptive), grow? 
+                // For now, just ensure it fits.
+            }}
+            
+            // Run after MathJax
+            if (window.MathJax) {{
+                MathJax.startup.promise.then(() => {{
+                    setTimeout(autoFit, 500); // Delay for rendering
+                }});
+            }} else {{
+                autoFit();
+            }}
+        }});
+    </script>
     <style>
         {css_content}
     </style>
@@ -225,33 +257,57 @@ class CompactFramework:
 </body>
 </html>"""
 
-        # 1. Group Short Tasks (Tasks 1 & 2)
+        # 1. Group Short Tasks (Tasks 1 & 2) - VERTICAL SPLIT / ZIGZAG
         short_tasks = [t for t in self.tasks if t.category == TaskCategory.SHORT]
         if len(short_tasks) >= 2:
             t1, t2 = short_tasks[0], short_tasks[1]
-            content = f"""
-            <div class="merged-split-vertical">
-                <div class="merged-task-top">
-                    <div class="task-header">Task {t1.number}</div>
-                    <div class="math-content">{t1.solution}</div>
+            
+            # Choose layout based on variant_class
+            if 'zigzag' in variant_class:
+                content = f"""
+                <div class="layout-zigzag">
+                    <div class="zigzag-separator">
+                         <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                             <polyline points="0,0 100,0 100,40 0,100" class="zigzag-line" />
+                         </svg>
+                    </div>
+                    <div class="task-top">
+                        <div class="task-id">{t1.number}</div>
+                        <div class="math-content">{t1.solution}</div>
+                    </div>
+                    <div class="task-bottom">
+                        <div class="task-id">{t2.number}</div>
+                        <div class="math-content">{t2.solution}</div>
+                    </div>
                 </div>
-                <div class="merged-task-bottom">
-                    <div class="task-header">Task {t2.number}</div>
-                    <div class="math-content">{t2.solution}</div>
+                """
+            else: # Default to Vertical Split for comparison
+                content = f"""
+                <div class="layout-vertical-split">
+                    <div class="task-left">
+                        <div class="task-id">#{t1.number}</div>
+                        <div class="math-content">{t1.solution}</div>
+                    </div>
+                    <div class="task-right">
+                        <div class="task-id">#{t2.number}</div>
+                        <div class="math-content">{t2.solution}</div>
+                    </div>
                 </div>
-            </div>
-            """
+                """
+            
             with open(os.path.join(output_dir, 'combined_short.html'), 'w', encoding='utf-8') as f:
                 f.write(base_template.replace('{{CONTENT}}', content))
 
-        # 2. Medium Task (Single)
+        # 2. Medium Task (Single) - ADAPTIVE ZOOM
         medium_tasks = [t for t in self.tasks if t.category == TaskCategory.MEDIUM]
         if medium_tasks:
             t = medium_tasks[0]
             content = f"""
-            <div class="task-wrapper">
-                <div class="task-header">Task {t.number}</div>
-                <div class="math-content">{t.solution}</div>
+            <div class="layout-adaptive">
+                <div class="adaptive-content">
+                    <div class="task-id">Task {t.number}</div>
+                    <div class="math-content">{t.solution}</div>
+                </div>
             </div>
             """
             with open(os.path.join(output_dir, 'medium_single.html'), 'w', encoding='utf-8') as f:
@@ -261,28 +317,29 @@ class CompactFramework:
         long_tasks = [t for t in self.tasks if t.category == TaskCategory.LONG]
         if long_tasks:
             t = long_tasks[0]
-            # Simple split by <hr> delimiter if present, or just arbitrary half
             parts = t.solution.split('<hr class="split-point">')
             if len(parts) < 2:
                 parts = [t.solution, "Continued..."]
             
-            # Part 1
+            # Part 1 (Adaptive)
             content1 = f"""
-            <div class="task-wrapper">
-                <div class="task-header">Task {t.number} (1/2)</div>
-                <div class="math-content">{parts[0]}</div>
-                <div class="page-indicator">1/2</div>
+            <div class="layout-adaptive">
+                <div class="adaptive-content">
+                    <div class="task-id">Task {t.number} (1/2)</div>
+                    <div class="math-content">{parts[0]}</div>
+                </div>
             </div>
             """
             with open(os.path.join(output_dir, 'long_split_part1.html'), 'w', encoding='utf-8') as f:
                 f.write(base_template.replace('{{CONTENT}}', content1))
                 
-            # Part 2
+            # Part 2 (Adaptive)
             content2 = f"""
-            <div class="task-wrapper">
-                <div class="task-header">Task {t.number} (2/2)</div>
-                <div class="math-content">{parts[1] if len(parts) > 1 else ''}</div>
-                <div class="page-indicator">2/2</div>
+            <div class="layout-adaptive">
+                <div class="adaptive-content">
+                    <div class="task-id">Task {t.number} (2/2)</div>
+                    <div class="math-content">{parts[1] if len(parts) > 1 else ''}</div>
+                </div>
             </div>
             """
             with open(os.path.join(output_dir, 'long_split_part2.html'), 'w', encoding='utf-8') as f:
@@ -327,7 +384,7 @@ class CompactFramework:
         # Читаем сгенерированный HTML
         with open(output_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
-            
+        
         # Если watch_mode, добавляем класс темы и оборачиваем задачи
         if watch_mode:
              # Внедряем класс темы в body
@@ -346,10 +403,10 @@ class CompactFramework:
              )
         else:
              # Заменяем ссылку на CSS на inline стили (старое поведение)
-             html_content = html_content.replace(
-                 '<link rel="stylesheet" href="framework/styles.css">',
-                 f'<style>\n{css_content}\n</style>'
-             )
+        html_content = html_content.replace(
+            '<link rel="stylesheet" href="framework/styles.css">',
+            f'<style>\n{css_content}\n</style>'
+        )
         
         # Удаляем {{CUSTOM_STYLES}} если он не был заменен
         html_content = html_content.replace('{{CUSTOM_STYLES}}', '')
